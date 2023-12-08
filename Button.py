@@ -2,7 +2,7 @@ import pygame
 
 
 class MenuButton:
-    def __init__(self, x, y, width, height, text, image_path, hover_path=None, sound_path=None, clicked_path = None):
+    def __init__(self, x, y, width, height, text, image_path, hover_path=None, sound_path=None, clicked_path=None):
         self.x = x
         self.y = y
         self.width = width
@@ -18,11 +18,15 @@ class MenuButton:
         if clicked_path:
             self.clicked_image = pygame.image.load(clicked_path)
             self.clicked_image = pygame.transform.scale(self.clicked_image, (width, height))
-            self.rect = self.image.get_rect(topleft=(x,y))
+            self.rect = self.image.get_rect(topleft=(x, y))
         self.sound = None
         if sound_path:
             self.sound = pygame.mixer.Sound(sound_path)
         self.hovered = False
+
+    def set_pos(self, x):
+        self.x = x
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
 
     def show(self, screen):
         if self.hovered:
