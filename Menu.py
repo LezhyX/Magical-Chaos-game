@@ -1,8 +1,10 @@
 import pygame
 import sys
 from Button import MenuButton
+from Tutorial import start_tutorial
 
 pygame.init()
+pygame.mixer.init()
 width, height = 1280, 720
 max_fps = 30
 
@@ -163,6 +165,10 @@ def tutorial_selection():
             if event.type == pygame.USEREVENT and event.button == back:
                 fade()
                 running = False
+
+            if event.type == pygame.USEREVENT and event.button == start:
+                fade()
+                start_tutorial(width, height, screen)
 
             for button in [start, back]:
                 button.check_click(event)
