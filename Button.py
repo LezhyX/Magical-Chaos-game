@@ -35,7 +35,7 @@ class MenuButton:
             current_image = self.image
         screen.blit(current_image, self.rect.topleft)
 
-        font = pygame.font.Font('Silver.ttf', 56)
+        font = pygame.font.Font('assets/Silver.ttf', 56)
         text_surface = font.render(self.text, True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=self.rect.center)
         screen.blit(text_surface, text_rect)

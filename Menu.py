@@ -10,29 +10,29 @@ max_fps = 30
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Magical Chaos")
-menu_background = pygame.image.load('menu_background_720.jpg')
+menu_background = pygame.image.load('assets/menu_background_720.jpg')
 clock = pygame.time.Clock()
 monitor_size = [pygame.display.Info().current_w, pygame.display.Info().current_h]
 fullscreen_mode = False
 
 
 def main_menu():
-    choose_level = MenuButton(width / 2 - 200, height / 5, 400, height / 10, 'Выбрать уровень', 'red_button.png',
-                              'red_button_hover.png', 'click.ogg')
-    gear = MenuButton(width / 2 - 200, height / 3, width / 3.2, 50, 'Снаряжение', 'yellow_button.png',
-                      'yellow_button_hover.png', 'click.ogg')
+    choose_level = MenuButton(width / 2 - 200, height / 5, 400, height / 10, 'Выбрать уровень', 'assets/red_button.png',
+                              'assets/red_button_hover.png', 'assets/click.ogg')
+    gear = MenuButton(width / 2 - 200, height / 3, width / 3.2, 50, 'Снаряжение', 'assets/yellow_button.png',
+                      'assets/yellow_button_hover.png', 'assets/click.ogg')
     introduction = MenuButton(width / 2 - 200, height / 3 + 80, width / 3.2, height / 14.4,
-                              'Справка', 'yellow_button.png', 'yellow_button_hover.png', 'click.ogg')
+                              'Справка', 'assets/yellow_button.png', 'assets/yellow_button_hover.png', 'assets/click.ogg')
     settings = MenuButton(width / 2 - 200, height / 3 + 160, width / 3.2, height / 14.4,
-                          'Настройки', 'yellow_button.png', 'yellow_button_hover.png', 'click.ogg')
+                          'Настройки', 'assets/yellow_button.png', 'assets/yellow_button_hover.png', 'assets/click.ogg')
     log_out = MenuButton(width / 2 - 200, height / 3 + 240, width / 3.2, height / 14.4, 'Выйти',
-                         'yellow_button.png', 'yellow_button_hover.png', 'click.ogg')
+                         'assets/yellow_button.png', 'assets/yellow_button_hover.png', 'assets/click.ogg')
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 150)
+        font = pygame.font.Font('assets/Silver.ttf', 150)
         text_surface = font.render("Magical Chaos", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, height / 7.2))
         screen.blit(text_surface, text_rect)
@@ -77,21 +77,21 @@ def main_menu():
 
 
 def level_selection():
-    tutorial = MenuButton(width / 2 - 200, height / 5, 400, height / 15, 'В пещерах...', 'yellow_button.png',
-                          'yellow_button_hover.png', 'click.ogg')
-    level_one = MenuButton(width / 2 - 200, height / 5 + 72, 400, height / 15, 'В небе...', 'yellow_button.png',
-                           'yellow_button_hover.png', 'click.ogg')
-    level_two = MenuButton(width / 2 - 200, height / 5 + 144, 400, height / 15, 'Coming Soon...', 'yellow_button.png',
-                           'yellow_button_hover.png', 'click.ogg')
-    back = MenuButton(width / 2 - 200, height / 5 + 216, 400, height / 15, 'Назад', 'red_button.png',
-                      'red_button_hover.png', 'click.ogg')
+    tutorial = MenuButton(width / 2 - 200, height / 5, 400, height / 15, 'В пещерах...', 'assets/yellow_button.png',
+                          'assets/yellow_button_hover.png', 'assets/click.ogg')
+    level_one = MenuButton(width / 2 - 200, height / 5 + 72, 400, height / 15, 'В небе...', 'assets/yellow_button.png',
+                           'assets/yellow_button_hover.png', 'assets/click.ogg')
+    level_two = MenuButton(width / 2 - 200, height / 5 + 144, 400, height / 15, 'Coming Soon...', 'assets/yellow_button.png',
+                           'assets/yellow_button_hover.png', 'assets/click.ogg')
+    back = MenuButton(width / 2 - 200, height / 5 + 216, 400, height / 15, 'Назад', 'assets/red_button.png',
+                      'assets/red_button_hover.png', 'assets/click.ogg')
 
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 150)
+        font = pygame.font.Font('assets/Silver.ttf', 150)
         text_surface = font.render("Выбор уровня", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, height / 7.2))
         screen.blit(text_surface, text_rect)
@@ -129,26 +129,26 @@ def level_selection():
 
 
 def tutorial_selection():
-    start = MenuButton(width / 8, height / 1.5, 300, height / 15, 'Начать', 'yellow_button.png',
-                       'yellow_button_hover.png', 'click.ogg')
-    back = MenuButton(width * 7 / 8 - 300, height / 1.5, 300, height / 15, 'Назад', 'red_button.png',
-                      'red_button_hover.png', 'click.ogg')
+    start = MenuButton(width / 8, height / 1.5, 300, height / 15, 'Начать', 'assets/yellow_button.png',
+                       'assets/yellow_button_hover.png', 'assets/click.ogg')
+    back = MenuButton(width * 7 / 8 - 300, height / 1.5, 300, height / 15, 'Назад', 'assets/red_button.png',
+                      'assets/red_button_hover.png', 'assets/click.ogg')
 
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 50)
-        text_surface = font.render("Первый и одновременно обучающий уровень,", True, (255, 0, 0))
+        font = pygame.font.Font('assets/Silver.ttf', 50)
+        text_surface = font.render("Первый уровень,", True, (255, 0, 0))
         text_surface1 = font.render('создан для освоения игры', True, (255, 0, 0))
         text_rect = text_surface.get_rect(center=(width / 2, 300))
         text_rect1 = text_surface1.get_rect(center=(width / 2, 350))
         screen.blit(text_surface, text_rect)
         screen.blit(text_surface1, text_rect1)
 
-        font = pygame.font.Font('Silver.ttf', 150)
-        text_surface = font.render("Пещеры: обучение", True, (106, 90, 205))
+        font = pygame.font.Font('assets/Silver.ttf', 150)
+        text_surface = font.render("Уровень 1: Пещеры", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, height / 7.2))
         screen.blit(text_surface, text_rect)
 
@@ -180,14 +180,14 @@ def tutorial_selection():
 
 
 def level_one_selection():
-    back = MenuButton(width / 2 - 200, height / 2, 400, height / 10, 'Ok', 'red_button.png',
-                      'red_button_hover.png', 'click.ogg')
+    back = MenuButton(width / 2 - 200, height / 2, 400, height / 10, 'Ok', 'assets/red_button.png',
+                      'assets/red_button_hover.png', 'assets/click.ogg')
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 100)
+        font = pygame.font.Font('assets/Silver.ttf', 100)
         text_surface = font.render("WIP", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, 300))
         screen.blit(text_surface, text_rect)
@@ -219,18 +219,18 @@ def level_one_selection():
 
 def settings_menu():
     global screen
-    video = MenuButton(width / 2 - 200, height / 5, 400, height / 15, 'Видео', 'yellow_button.png',
-                       'yellow_button_hover.png', 'click.ogg')
-    audio = MenuButton(width / 2 - 200, height / 5 + 72, 400, height / 15, 'Аудио', 'yellow_button.png',
-                       'yellow_button_hover.png', 'click.ogg')
-    back = MenuButton(width / 2 - 200, height / 5 + 144, 400, height / 15, 'Назад', 'red_button.png',
-                      'red_button_hover.png', 'click.ogg')
+    video = MenuButton(width / 2 - 200, height / 5, 400, height / 15, 'Видео', 'assets/yellow_button.png',
+                       'assets/yellow_button_hover.png', 'assets/click.ogg')
+    audio = MenuButton(width / 2 - 200, height / 5 + 72, 400, height / 15, 'Аудио', 'assets/yellow_button.png',
+                       'assets/yellow_button_hover.png', 'assets/click.ogg')
+    back = MenuButton(width / 2 - 200, height / 5 + 144, 400, height / 15, 'Назад', 'assets/red_button.png',
+                      'assets/red_button_hover.png', 'assets/click.ogg')
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 100)
+        font = pygame.font.Font('assets/Silver.ttf', 100)
         text_surface = font.render("Настройки", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, 100))
         screen.blit(text_surface, text_rect)
@@ -269,14 +269,14 @@ def settings_menu():
 
 
 def gear_menu():
-    back = MenuButton(width / 2 - 200, height / 2, 400, height / 10, 'Ok', 'red_button.png',
-                      'red_button_hover.png', 'click.ogg')
+    back = MenuButton(width / 2 - 200, height / 2, 400, height / 10, 'Ok', 'assets/red_button.png',
+                      'assets/red_button_hover.png', 'assets/click.ogg')
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 100)
+        font = pygame.font.Font('assets/Silver.ttf', 100)
         text_surface = font.render("WIP", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, 300))
         screen.blit(text_surface, text_rect)
@@ -307,14 +307,14 @@ def gear_menu():
 
 
 def introduction_menu():
-    back = MenuButton(width / 2 - 200, height / 2, 400, height / 10, 'Ok', 'red_button.png',
-                      'red_button_hover.png', 'click.ogg')
+    back = MenuButton(width / 2 - 200, height / 2, 400, height / 10, 'Ok', 'assets/red_button.png',
+                      'assets/red_button_hover.png', 'assets/click.ogg')
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 100)
+        font = pygame.font.Font('assets/Silver.ttf', 100)
         text_surface = font.render("WIP", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, 300))
         screen.blit(text_surface, text_rect)
@@ -345,18 +345,17 @@ def introduction_menu():
 
 
 def logout_confirmation():
-    logout = MenuButton((width / 3) - (width / 6.4), height / 1.8, width / 3.2, height / 9.6, 'Да', 'red_button.png',
-                        'red_button_hover.png', 'click.ogg')
+    logout = MenuButton((width / 3) - (width / 6.4), height / 1.8, width / 3.2, height / 9.6, 'Да', 'assets/red_button.png',
+                        'assets/red_button_hover.png', 'assets/click.ogg')
     back = MenuButton(width * 2 / 3 - (width / 6.4), height / 1.8, width / 3.2, height / 9.6, 'Нет',
-                      'yellow_button.png',
-                      'yellow_button_hover.png', 'click.ogg')
+                      'assets/yellow_button.png', 'assets/yellow_button_hover.png', 'assets/click.ogg')
 
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 100)
+        font = pygame.font.Font('assets/Silver.ttf', 100)
         text_surface = font.render("Выйти из игры?", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, 200))
         screen.blit(text_surface, text_rect)
@@ -390,23 +389,23 @@ def logout_confirmation():
 
 
 def video_settings():
-    sd = MenuButton(width / 2 - 200, height / 4, 400, height / 15, '960x544', 'yellow_button.png',
-                    'yellow_button_hover.png', 'click.ogg')
-    hd = MenuButton(width / 2 - 200, height / 4 + 72, 400, height / 15, '1280x720', 'yellow_button.png',
-                    'yellow_button_hover.png', 'click.ogg')
-    fullhd = MenuButton(width / 2 - 200, height / 4 + 144, 400, height / 15, '1920x1080', 'yellow_button.png',
-                        'yellow_button_hover.png', 'click.ogg')
-    fullscreen = MenuButton(width / 2 - 200, height / 4 + 216, 400, height / 15, 'Полный экран', 'yellow_button.png',
-                            'yellow_button_hover.png', 'click.ogg')
-    back = MenuButton(width / 2 - 200, height / 4 + 288, 400, height / 15, 'Назад', 'red_button.png',
-                      'red_button_hover.png', 'click.ogg')
+    sd = MenuButton(width / 2 - 200, height / 4, 400, height / 15, '960x544', 'assets/yellow_button.png',
+                    'assets/yellow_button_hover.png', 'assets/click.ogg')
+    hd = MenuButton(width / 2 - 200, height / 4 + 72, 400, height / 15, '1280x720', 'assets/yellow_button.png',
+                    'assets/yellow_button_hover.png', 'assets/click.ogg')
+    fullhd = MenuButton(width / 2 - 200, height / 4 + 144, 400, height / 15, '1920x1080', 'assets/yellow_button.png',
+                        'assets/yellow_button_hover.png', 'assets/click.ogg')
+    fullscreen = MenuButton(width / 2 - 200, height / 4 + 216, 400, height / 15, 'Полный экран', 'assets/yellow_button.png',
+                            'assets/yellow_button_hover.png', 'assets/click.ogg')
+    back = MenuButton(width / 2 - 200, height / 4 + 288, 400, height / 15, 'Назад', 'assets/red_button.png',
+                      'assets/red_button_hover.png', 'assets/click.ogg')
 
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 100)
+        font = pygame.font.Font('assets/Silver.ttf', 100)
         text_surface = font.render("Выбор разрешения", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, 100))
         screen.blit(text_surface, text_rect)
@@ -452,14 +451,14 @@ def video_settings():
 
 
 def change_volume():
-    back = MenuButton(width / 2 - 200, height / 2, 400, height / 10, 'Ok', 'red_button.png',
-                      'red_button_hover.png', 'click.ogg')
+    back = MenuButton(width / 2 - 200, height / 2, 400, height / 10, 'Ok', 'assets/red_button.png',
+                      'assets/red_button_hover.png', 'assets/click.ogg')
     running = True
     while running:
         screen.fill((0, 0, 0))
         screen.blit(menu_background, (0, 0))
 
-        font = pygame.font.Font('Silver.ttf', 100)
+        font = pygame.font.Font('assets/Silver.ttf', 100)
         text_surface = font.render("WIP", True, (106, 90, 205))
         text_rect = text_surface.get_rect(center=(width / 2, 300))
         screen.blit(text_surface, text_rect)
@@ -493,7 +492,7 @@ def change_resolution(w, h):
     global width, height, screen, menu_background
     width, height = w, h
     screen = pygame.display.set_mode((w, h))
-    menu_background = pygame.image.load(f'menu_background_{h}.jpg')
+    menu_background = pygame.image.load(f'assets/menu_background_{h}.jpg')
     fade()
 
 
@@ -501,7 +500,7 @@ def switch_fullscreen():
     global width, height, screen, menu_background
     width, height = monitor_size
     screen = pygame.display.set_mode(monitor_size, pygame.FULLSCREEN)
-    menu_background = pygame.image.load('menu_background_1080.jpg')
+    menu_background = pygame.image.load('assets/menu_background_1080.jpg')
 
 
 def fade():
