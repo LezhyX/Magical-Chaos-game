@@ -10,7 +10,6 @@ mobs = pygame.sprite.Group()
 elites = pygame.sprite.Group()
 player_sprite = pygame.sprite.Group()
 boss_sprite = pygame.sprite.Group()
-game_over = False
 
 
 class Mob(pygame.sprite.Sprite):
@@ -183,10 +182,12 @@ class Boss(pygame.sprite.Sprite):
                                       int(math.degrees(angle_to_player - math.pi / 8)))
         projectile_topleft = Projectile(self.rect.left, self.rect.top, int(math.degrees(angle_to_player)))
         projectile_topright = Projectile(self.rect.right, self.rect.top, int(math.degrees(angle_to_player)))
-        projectile_topright_left = Projectile(self.rect.right, self.rect.top, int(math.degrees(angle_to_player + math.pi / 8)))
+        projectile_topright_left = Projectile(self.rect.right, self.rect.top,
+                                              int(math.degrees(angle_to_player + math.pi / 8)))
         projectile_topleft_right = Projectile(self.rect.left, self.rect.top,
                                               int(math.degrees(angle_to_player - math.pi / 8)))
-        projectiles.add(projectile_center, projectile_left, projectile_right, projectile_topleft, projectile_topright, projectile_topright_left, projectile_topleft_right)
+        projectiles.add(projectile_center, projectile_left, projectile_right, projectile_topleft, projectile_topright,
+                        projectile_topright_left, projectile_topleft_right)
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -308,168 +309,164 @@ class Player(pygame.sprite.Sprite):
         bullets.add(bullet_right)
 
 
-def start_tutorial(width, height, screen, weapon_selected, volume):
-    global game_over
-    to_menu = MenuButton(width * 7 / 8 - 300, height / 1.5, 300, height / 15, 'В меню', 'assets/red_button.png',
-                         'assets/red_button_hover.png', 'assets/click.ogg')
-    font = pygame.font.Font('assets/Silver.ttf', 50)
-    score, combo, last_mob_spawn, last_mob_shoot, last_elite_spawn, last_elite_type, last_elite_shoot, last_fireball_spawn, last_boss_shoot, pause_start_time, pause_duration, boss_count = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    mobs_music = 'assets/cave_mobs.mp3'
-    boss_music = 'assets/cave_boss.mp3'
-    pygame.mixer.music.load(mobs_music)
-    pygame.mixer.music.set_volume(volume)
-    pygame.mixer.music.play()
-    paused = False
-    clock = pygame.time.Clock()
-    player = Player(width, height)
-    player_sprite.add(player)
-    background = pygame.transform.scale(pygame.image.load('assets/cave.png').convert(), (width, height))
-    pause_surface = pygame.Surface((width, height))
-    pause_surface.set_alpha(128)
-    start_time = pygame.time.get_ticks()
-    boss_music_playing = False
-    running = True
-    while running:
-        clock.tick(60)
-        if not paused:
-            game_time = pygame.time.get_ticks() - pause_duration
-            screen.blit(background, (0, 0))
+class Gameplay:
+    def __init__(self, width, height, screen, weapon_selected, volume):
+        self.width = width
+        self.height = height
+        self.screen = screen
+        self.weapon_selected = weapon_selected
+        self.volume = volume
+        self.game_over = False
 
-            for event in pygame.event.get():
+    def start_tutorial(self):
+        to_menu = MenuButton(self.width * 7 / 8 - 300, self.height / 1.5, 300, self.height / 15, 'В меню', 'assets/red_button.png',
+                             'assets/red_button_hover.png', 'assets/click.ogg')
+        font = pygame.font.Font('assets/Silver.ttf', 50)
+        score, combo, last_mob_spawn, last_mob_shoot, last_elite_spawn, last_elite_type, last_elite_shoot, last_fireball_spawn, last_boss_shoot, pause_start_time, pause_duration, boss_count = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        mobs_music = 'assets/cave_mobs.mp3'
+        boss_music = 'assets/cave_boss.mp3'
+        pygame.mixer.music.load(mobs_music)
+        pygame.mixer.music.set_volume(self.volume)
+        pygame.mixer.music.play()
+        paused = False
+        clock = pygame.time.Clock()
+        player = Player(self.width, self.height)
+        player_sprite.add(player)
+        background = pygame.transform.scale(pygame.image.load('assets/cave.png').convert(), (self.width, self.height))
+        pause_surface = pygame.Surface((self.width, self.height))
+        pause_surface.set_alpha(128)
+        start_time = pygame.time.get_ticks()
+        boss_music_playing = False
+        running = True
+        while running:
+            clock.tick(60)
+            if not paused:
+                game_time = pygame.time.get_ticks() - pause_duration
+                self.screen.blit(background, (0, 0))
 
-                if event.type == pygame.QUIT:
-                    running = False
-                    pygame.quit()
-                    sys.exit()
+                for event in pygame.event.get():
 
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        if weapon_selected == 0:
-                            player.default_shoot()
-                        elif weapon_selected == 1:
-                            player.shotgun_shoot()
-                    elif event.key == pygame.K_ESCAPE:
-                        paused = not paused
+                    if event.type == pygame.QUIT:
+                        running = False
+                        pygame.quit()
+                        sys.exit()
 
-            if not boss_music_playing and game_time - start_time >= 89000:
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load(boss_music)
-                pygame.mixer.music.set_volume(volume * 0.8)
-                pygame.mixer.music.play()
-                boss_music_playing = True
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            if self.weapon_selected == 0:
+                                player.default_shoot()
+                            elif self.weapon_selected == 1:
+                                player.shotgun_shoot()
+                        elif event.key == pygame.K_ESCAPE:
+                            paused = not paused
 
-            if 7000 <= game_time - start_time <= 44000:
-                if game_time - last_mob_spawn >= 3000:
-                    mob = Mob(width, height)
-                    mobs.add(mob)
-                    last_mob_spawn = game_time
-            if 68000 <= game_time - start_time <= 89000:
-                if game_time - last_mob_spawn >= 5000:
-                    mob = Mob(width, height)
-                    mobs.add(mob)
-                    last_mob_spawn = game_time
+                if not boss_music_playing and game_time - start_time >= 89000:
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load(boss_music)
+                    pygame.mixer.music.set_volume(self.volume * 0.8)
+                    pygame.mixer.music.play()
+                    boss_music_playing = True
 
-            if 89000 >= game_time - start_time >= 44000:
-                if game_time - last_elite_spawn >= 3000:
-                    elite = Elite(width, height, last_elite_type)
-                    elites.add(elite)
-                    last_elite_spawn = game_time
-                    if last_elite_type == 0:
-                        last_elite_type = 1
-                    elif last_elite_type == 1:
-                        last_elite_type = 0
+                if 7000 <= game_time - start_time <= 44000:
+                    if game_time - last_mob_spawn >= 3000:
+                        mob = Mob(self.width, self.height)
+                        mobs.add(mob)
+                        last_mob_spawn = game_time
+                if 68000 <= game_time - start_time <= 89000:
+                    if game_time - last_mob_spawn >= 5000:
+                        mob = Mob(self.width, self.height)
+                        mobs.add(mob)
+                        last_mob_spawn = game_time
 
-            if game_time - start_time >= 89000:
-                if boss_count < 1:
+                if 89000 >= game_time - start_time >= 44000:
+                    if game_time - last_elite_spawn >= 3000:
+                        elite = Elite(self.width, self.height, last_elite_type)
+                        elites.add(elite)
+                        last_elite_spawn = game_time
+                        if last_elite_type == 0:
+                            last_elite_type = 1
+                        elif last_elite_type == 1:
+                            last_elite_type = 0
+
+                if game_time - start_time >= 89000:
+                    if boss_count < 1:
+                        for mob in mobs:
+                            mob.kill()
+                        for elite in elites:
+                            elite.kill()
+                        boss = Boss(self.width, self.height)
+                        boss_sprite.add(boss)
+                        boss_count = 1
+
+                if game_time - start_time >= 59000 or 44000 >= game_time - start_time >= 22000:
+                    if game_time - last_fireball_spawn >= 500:
+                        fireball = Projectile(random.randint(0, self.width), 0)
+                        projectiles.add(fireball)
+                        last_fireball_spawn = game_time
+
+                if game_time - last_mob_shoot >= 2000:
                     for mob in mobs:
-                        mob.kill()
+                        mob.shoot((player.rect.centerx, player.rect.centery))
+                    last_mob_shoot = game_time
+
+                if game_time - last_elite_shoot >= 3000:
                     for elite in elites:
-                        elite.kill()
-                    boss = Boss(width, height)
-                    boss_sprite.add(boss)
-                    boss_count = 1
+                        elite.shoot((player.rect.centerx, player.rect.centery))
+                    last_elite_shoot = game_time
 
-            if game_time - start_time >= 59000 or 44000 >= game_time - start_time >= 22000:
-                if game_time - last_fireball_spawn >= 500:
-                    fireball = Projectile(random.randint(0, width), 0)
-                    projectiles.add(fireball)
-                    last_fireball_spawn = game_time
+                if game_time - last_boss_shoot >= 1500:
+                    for boss in boss_sprite:
+                        boss.shoot((player.rect.centerx, player.rect.centery))
+                    last_boss_shoot = game_time
 
-            if game_time - last_mob_shoot >= 2000:
+                boss_sprite.update(self.width, self.height)
+                mobs.update(self.width, self.height)
+                elites.update(self.width, self.height)
+                projectiles.update(self.height)
+                bullets.update()
+                player_sprite.update(self.width, self.height)
+
+                hits = pygame.sprite.spritecollide(player, mobs, False)
+                for hit in hits:
+                    combo = 0
+                    player.hit(10)
+
+                hits = pygame.sprite.spritecollide(player, elites, False)
+                for hit in hits:
+                    combo = 0
+                    player.hit(20)
+
+                hits = pygame.sprite.spritecollide(player, boss_sprite, False)
+                for hit in hits:
+                    combo = 0
+                    player.hit(40)
+
                 for mob in mobs:
-                    mob.shoot((player.rect.centerx, player.rect.centery))
-                last_mob_shoot = game_time
+                    hits = pygame.sprite.spritecollide(mob, bullets, True)
+                    for bullet in hits:
+                        combo += 10
+                        score += combo
+                        mob.hit(bullet.damage)
 
-            if game_time - last_elite_shoot >= 3000:
                 for elite in elites:
-                    elite.shoot((player.rect.centerx, player.rect.centery))
-                last_elite_shoot = game_time
+                    hits = pygame.sprite.spritecollide(elite, bullets, True)
+                    for bullet in hits:
+                        combo += 10
+                        score += combo
+                        elite.hit(bullet.damage)
 
-            if game_time - last_boss_shoot >= 1500:
                 for boss in boss_sprite:
-                    boss.shoot((player.rect.centerx, player.rect.centery))
-                last_boss_shoot = game_time
+                    hits = pygame.sprite.spritecollide(boss, bullets, True)
+                    for bullet in hits:
+                        combo += 10
+                        score += combo
+                        boss.hit(bullet.damage)
 
-            boss_sprite.update(width, height)
-            mobs.update(width, height)
-            elites.update(width, height)
-            projectiles.update(height)
-            bullets.update()
-            player_sprite.update(width, height)
+                hits = pygame.sprite.groupcollide(player_sprite, projectiles, False, True)
+                if hits:
+                    player.hit(10)
 
-            hits = pygame.sprite.spritecollide(player, mobs, False)
-            for hit in hits:
-                combo = 0
-                player.hit(10)
-
-            hits = pygame.sprite.spritecollide(player, elites, False)
-            for hit in hits:
-                combo = 0
-                player.hit(20)
-
-            hits = pygame.sprite.spritecollide(player, boss_sprite, False)
-            for hit in hits:
-                combo = 0
-                player.hit(40)
-
-            for mob in mobs:
-                hits = pygame.sprite.spritecollide(mob, bullets, True)
-                for bullet in hits:
-                    combo += 10
-                    score += combo
-                    mob.hit(bullet.damage)
-
-            for elite in elites:
-                hits = pygame.sprite.spritecollide(elite, bullets, True)
-                for bullet in hits:
-                    combo += 10
-                    score += combo
-                    elite.hit(bullet.damage)
-
-            for boss in boss_sprite:
-                hits = pygame.sprite.spritecollide(boss, bullets, True)
-                for bullet in hits:
-                    combo += 10
-                    score += combo
-                    boss.hit(bullet.damage)
-
-            hits = pygame.sprite.groupcollide(player_sprite, projectiles, False, True)
-            if hits:
-                player.hit(10)
-
-            if player.hp <= 0:
-                pygame.mixer.music.stop()
-                bullets.empty()
-                mobs.empty()
-                elites.empty()
-                boss_sprite.empty()
-                projectiles.empty()
-                player_sprite.empty()
-                update_file(score, weapon_selected)
-                game_over_screen('Игра окончена', score, width, height, screen, weapon_selected, volume)
-                running = False
-            if game_time - start_time >= 89000:
-                if boss.hp <= 0:
+                if player.hp <= 0:
                     pygame.mixer.music.stop()
                     bullets.empty()
                     mobs.empty()
@@ -477,39 +474,11 @@ def start_tutorial(width, height, screen, weapon_selected, volume):
                     boss_sprite.empty()
                     projectiles.empty()
                     player_sprite.empty()
-                    update_file(score, weapon_selected)
-                    game_over_screen('Уровень пройден!', score, width, height, screen, weapon_selected, volume)
+                    self.update_file(score, self.weapon_selected)
+                    self.game_over_screen('Игра окончена', score, self.width, self.height, self.screen, self.weapon_selected, self.volume)
                     running = False
-
-        if paused:
-            if pause_start_time == 0:
-                pause_start_time = pygame.time.get_ticks()
-                pygame.mixer.music.pause()
-
-            screen.blit(background, (0, 0))
-            screen.blit(pause_surface, (0, 0))
-            text_surface = font.render("Пауза", True, (106, 90, 205))
-            text_rect = text_surface.get_rect(center=(width / 2, height / 2))
-            screen.blit(text_surface, text_rect)
-
-            for event in pygame.event.get():
-
-                if event.type == pygame.QUIT:
-                    running = False
-                    pygame.quit()
-                    sys.exit()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pause_end_time = pygame.time.get_ticks()
-                        pause_duration += pause_end_time - pause_start_time
-                        pause_start_time = 0
-                        pygame.mixer.music.unpause()
-                        paused = not paused
-
-                if event.type == pygame.USEREVENT:
-                    if event.button == to_menu:
-                        boss_music_playing = False
+                if game_time - start_time >= 89000:
+                    if boss.hp <= 0:
                         pygame.mixer.music.stop()
                         bullets.empty()
                         mobs.empty()
@@ -517,110 +486,147 @@ def start_tutorial(width, height, screen, weapon_selected, volume):
                         boss_sprite.empty()
                         projectiles.empty()
                         player_sprite.empty()
-                        update_file(score, weapon_selected)
-                        fade(width, height, screen)
-                        game_over_screen('Игра окончена', score, width, height, screen, weapon_selected, volume)
+                        self.update_file(score, self.weapon_selected)
+                        self.game_over_screen('Уровень пройден!', score, self.width, self.height, self.screen, self.weapon_selected, self.volume)
                         running = False
 
+            if paused:
+                if pause_start_time == 0:
+                    pause_start_time = pygame.time.get_ticks()
+                    pygame.mixer.music.pause()
+
+                self.screen.blit(background, (0, 0))
+                self.screen.blit(pause_surface, (0, 0))
+                text_surface = font.render("Пауза", True, (106, 90, 205))
+                text_rect = text_surface.get_rect(center=(self.width / 2, self.height / 2))
+                self.screen.blit(text_surface, text_rect)
+
+                for event in pygame.event.get():
+
+                    if event.type == pygame.QUIT:
+                        running = False
+                        pygame.quit()
+                        sys.exit()
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            pause_end_time = pygame.time.get_ticks()
+                            pause_duration += pause_end_time - pause_start_time
+                            pause_start_time = 0
+                            pygame.mixer.music.unpause()
+                            paused = not paused
+
+                    if event.type == pygame.USEREVENT:
+                        if event.button == to_menu:
+                            boss_music_playing = False
+                            pygame.mixer.music.stop()
+                            bullets.empty()
+                            mobs.empty()
+                            elites.empty()
+                            boss_sprite.empty()
+                            projectiles.empty()
+                            player_sprite.empty()
+                            self.update_file(score, self.weapon_selected)
+                            self.fade(self.width, self.height, self.screen)
+                            self.game_over_screen('Игра окончена', score, self.width, self.height, self.screen, self.weapon_selected, self.volume)
+                            running = False
+
+                    for button in [to_menu]:
+                        button.check_click(event)
+
                 for button in [to_menu]:
+                    button.check_hover(pygame.mouse.get_pos())
+                    button.show(self.screen)
+
+            game_time -= pause_duration
+            player_sprite.draw(self.screen)
+            projectiles.draw(self.screen)
+            bullets.draw(self.screen)
+            mobs.draw(self.screen)
+            elites.draw(self.screen)
+            boss_sprite.draw(self.screen)
+            score_text = font.render("Счет:" + str(score), True, (255, 255, 255))
+            hp_text = font.render('HP:' + str(player.hp), True, (255, 255, 255))
+            if game_time - start_time >= 89000:
+                boss_hp_text = font.render('Boss HP:' + str(boss.hp), True, (255, 255, 255))
+                self.screen.blit(boss_hp_text, (self.width * (3 / 4), 90))
+            self.screen.blit(score_text, (self.width * (3 / 4), 10))
+            self.screen.blit(hp_text, (self.width * (3 / 4), 50))
+            pygame.display.flip()
+
+    def game_over_screen(self, text, score, width, height, screen, weapon_selected, volume):
+        restart = MenuButton(width / 8, height / 1.5, 300, height / 15, 'Заново', 'assets/yellow_button.png',
+                             'assets/yellow_button_hover.png', 'assets/click.ogg')
+        to_menu = MenuButton(width * 7 / 8 - 300, height / 1.5, 300, height / 15, 'В меню', 'assets/red_button.png',
+                             'assets/red_button_hover.png', 'assets/click.ogg')
+        running = True
+        while running:
+            screen.fill((0, 0, 0))
+            background = pygame.transform.scale(pygame.image.load('assets/cave.png').convert(), (width, height))
+            screen.blit(background, (0, 0))
+            font = pygame.font.Font('assets/Silver.ttf', 50)
+            game_over_text = font.render(f'{text}', True, (255, 255, 255))
+            screen.blit(game_over_text,
+                        (width / 2 - game_over_text.get_width() / 2, height / 3 - game_over_text.get_height() / 3))
+            score_text = font.render(f'Счет: {score}', True, (255, 255, 255))
+            screen.blit(score_text,
+                        (width / 2 - score_text.get_width() / 2, height / 2 - score_text.get_height() / 2))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.USEREVENT and event.button == restart:
+                    self.fade(width, height, screen)
+                    self.start_tutorial()
+                    running = False
+
+                if event.type == pygame.USEREVENT and event.button == to_menu:
+                    pygame.mixer.music.load('assets/menu_music.mp3')
+                    self.fade(width, height, screen)
+                    running = False
+
+                for button in [restart, to_menu]:
                     button.check_click(event)
 
-            for button in [to_menu]:
+            for button in [restart, to_menu]:
                 button.check_hover(pygame.mouse.get_pos())
                 button.show(screen)
 
-        game_time -= pause_duration
-        player_sprite.draw(screen)
-        projectiles.draw(screen)
-        bullets.draw(screen)
-        mobs.draw(screen)
-        elites.draw(screen)
-        boss_sprite.draw(screen)
-        score_text = font.render("Счет:" + str(score), True, (255, 255, 255))
-        hp_text = font.render('HP:' + str(player.hp), True, (255, 255, 255))
-        if game_time - start_time >= 89000:
-            boss_hp_text = font.render('Boss HP:' + str(boss.hp), True, (255, 255, 255))
-            screen.blit(boss_hp_text, (width * (3 / 4), 90))
-        screen.blit(score_text, (width * (3 / 4), 10))
-        screen.blit(hp_text, (width * (3 / 4), 50))
-        pygame.display.flip()
+            pygame.display.flip()
 
+    def update_file(self, new_score, weapon_selected):
+        additional_gold = int(new_score / 10)
+        with open('assets/info.txt', 'r') as file:
+            data = file.read().split(',')
+            current_score = int(data[0])
+            current_gold = int(data[1])
+            current_score = max(current_score, new_score)
+            current_gold += additional_gold
+            with open('assets/info.txt', 'w') as file:
+                file.write(f"{current_score},{current_gold},{weapon_selected}")
 
-def game_over_screen(text, score, width, height, screen, weapon_selected, volume):
-    restart = MenuButton(width / 8, height / 1.5, 300, height / 15, 'Заново', 'assets/yellow_button.png',
-                         'assets/yellow_button_hover.png', 'assets/click.ogg')
-    to_menu = MenuButton(width * 7 / 8 - 300, height / 1.5, 300, height / 15, 'В меню', 'assets/red_button.png',
-                         'assets/red_button_hover.png', 'assets/click.ogg')
-    running = True
-    while running:
-        screen.fill((0, 0, 0))
-        background = pygame.transform.scale(pygame.image.load('assets/cave.png').convert(), (width, height))
-        screen.blit(background, (0, 0))
-        font = pygame.font.Font('assets/Silver.ttf', 50)
-        game_over_text = font.render(f'{text}', True, (255, 255, 255))
-        screen.blit(game_over_text,
-                    (width / 2 - game_over_text.get_width() / 2, height / 3 - game_over_text.get_height() / 3))
-        score_text = font.render(f'Счет: {score}', True, (255, 255, 255))
-        screen.blit(score_text,
-                    (width / 2 - score_text.get_width() / 2, height / 2 - score_text.get_height() / 2))
+    def fade(self, width, height, screen):
+        clock = pygame.time.Clock()
+        running = True
+        fade_alpha = 0
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-                sys.exit()
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
-            if event.type == pygame.USEREVENT and event.button == restart:
-                fade(width, height, screen)
-                start_tutorial(width, height, screen, weapon_selected, volume)
+            fade_surface = pygame.Surface((width, height))
+            fade_surface.fill((0, 0, 0))
+            fade_surface.set_alpha(fade_alpha)
+            screen.blit(fade_surface, (0, 0))
+
+            fade_alpha += 5
+            if fade_alpha >= 75:
+                fade_alpha = 255
                 running = False
 
-            if event.type == pygame.USEREVENT and event.button == to_menu:
-                pygame.mixer.music.load('assets/menu_music.mp3')
-                fade(width, height, screen)
-                running = False
-
-            for button in [restart, to_menu]:
-                button.check_click(event)
-
-        for button in [restart, to_menu]:
-            button.check_hover(pygame.mouse.get_pos())
-            button.show(screen)
-
-        pygame.display.flip()
-
-
-def update_file(new_score, weapon_selected):
-    additional_gold = int(new_score / 10)
-    with open('assets/info.txt', 'r') as file:
-        data = file.read().split(',')
-        current_score = int(data[0])
-        current_gold = int(data[1])
-        current_score = max(current_score, new_score)
-        current_gold += additional_gold
-        with open('assets/info.txt', 'w') as file:
-            file.write(f"{current_score},{current_gold},{weapon_selected}")
-
-
-def fade(width, height, screen):
-    clock = pygame.time.Clock()
-    running = True
-    fade_alpha = 0
-
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        fade_surface = pygame.Surface((width, height))
-        fade_surface.fill((0, 0, 0))
-        fade_surface.set_alpha(fade_alpha)
-        screen.blit(fade_surface, (0, 0))
-
-        fade_alpha += 5
-        if fade_alpha >= 75:
-            fade_alpha = 255
-            running = False
-
-        pygame.display.flip()
-        clock.tick(60)
+            pygame.display.flip()
+            clock.tick(60)
